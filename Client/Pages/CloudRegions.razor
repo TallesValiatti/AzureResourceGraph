@@ -1,0 +1,46 @@
+﻿@page "/cloudregions"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using ResourceGraphApp.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+
+<PageTitle>Cloud Regions</PageTitle>
+
+<h1>Cloud Regions</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (_cloudRegion == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Region</th>
+                <th>Qtd of Resources</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cloudRegion in _cloudRegion.Data)
+            {
+                <tr>
+                    <td>@cloudRegion.Location</td>
+                    <td>@cloudRegion.Qtd</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private CloudRegion? _cloudRegion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cloudRegion = await Http.GetFromJsonAsync<CloudRegion>("CloudResources");
+    }
+}
